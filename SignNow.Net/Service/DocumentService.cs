@@ -298,5 +298,21 @@ namespace SignNow.Net.Service
                 .RequestAsync<EditDocumentResponse>(requestOptions, cancellationToken)
                 .ConfigureAwait(false);
         }
+
+        /// <inheritdoc />
+        /// <exception cref="System.ArgumentException">If <see paramref="documentId"/> is not valid.</exception>
+        public async Task<GetSmartFieldsResponse> GetSmartFieldsAsync(string documentId, CancellationToken cancellationToken = default)
+        {
+            Token.TokenType = TokenType.Bearer;
+            var requestOptions = new GetHttpRequestOptions()
+            {
+                RequestUrl = new Uri(ApiBaseUrl, $"/document/{documentId.ValidateId()}/integration_objects"),
+                Token = Token
+            };
+
+            return await SignNowClient
+                .RequestAsync<GetSmartFieldsResponse>(requestOptions, cancellationToken)
+                .ConfigureAwait(false);
+        }
     }
 }
