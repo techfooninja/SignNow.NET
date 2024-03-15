@@ -146,5 +146,14 @@ namespace SignNow.Net.Interfaces
         /// <param name="cancellationToken">Propagates notification that operations should be canceled.</param>
         /// <returns>Collection of smart fields, if any are present</returns>
         Task<GetSmartFieldsResponse> GetSmartFieldsAsync(string documentId, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Pre-fills smart fields for a document.
+        /// </summary>
+        /// <param name="documentId">Identity of the document to pre-fill smart fields for.</param>
+        /// <param name="values">Field values for the smart fields in the document.</param>
+        /// <param name="cancellationToken">Propagates notification that operations should be canceled.</param>
+        /// <returns>Status of the request.</returns>
+        Task<PrefillSmartFieldsResponse> PrefillSmartFieldsAsync(string documentId, IEnumerable<SignNowSmartFieldValue> values, CancellationToken cancellationToken = default);
     }
 }

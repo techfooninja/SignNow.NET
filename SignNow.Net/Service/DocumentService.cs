@@ -12,6 +12,7 @@ using System.Net.Http;
 using SignNow.Net.Model.EditFields;
 using SignNow.Net.Model.Requests;
 using SignNow.Net.Model.Responses;
+using SignNow.Net._Internal.Requests;
 
 namespace SignNow.Net.Service
 {
@@ -312,6 +313,29 @@ namespace SignNow.Net.Service
 
             return await SignNowClient
                 .RequestAsync<GetSmartFieldsResponse>(requestOptions, cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        /// <inheritdoc />
+        /// <exception cref="System.ArgumentException">If <see paramref="documentId"/> is not valid.</exception>
+        /// /// <exception cref="System.ArgumentNullException">If <see paramref="values"/> is null.</exception>
+        public async Task<PrefillSmartFieldsResponse> PrefillSmartFieldsAsync(string documentId, IEnumerable<SignNowSmartFieldValue> values, CancellationToken cancellationToken = default)
+        {
+            Guard.ArgumentNotNull(values, nameof(values));
+
+            Token.TokenType = TokenType.Bearer;
+            var requestOptions = new PostHttpRequestOptions()
+            {
+                RequestUrl = new Uri(ApiBaseUrl, $"/document/{documentId.ValidateId()}/integration/object/smartfields"),
+                Content = new PrefillSmartFieldsRequest()
+                {
+                    Data = values,
+                },
+                Token = Token
+            };
+
+            return await SignNowClient
+                .RequestAsync<PrefillSmartFieldsResponse>(requestOptions, cancellationToken)
                 .ConfigureAwait(false);
         }
     }
